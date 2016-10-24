@@ -1,0 +1,336 @@
+<html>
+<title>Compare pixels</title>
+<style type="text/css">
+body 
+{
+	background-image:url(http://images.fineartamerica.com/images-medium-large-5/splatter-works-iv-tina-baxter.jpg);
+	//margin: 0;
+	//padding: 0;
+	font-family: helvetica,arial,sans-serif;
+	background-attachment:relative;
+	background-size:100% 100%;
+}
+canvas 
+{
+	display: block;
+	background-color:black;	
+	//margin:0px 0px;
+	padding : 0 0;
+	float:left;
+}
+.overlay {
+	height:100%;
+	width: 0;
+	position: fixed;
+	z-index: 1;
+	top: 0;
+	left: 0;
+	background-color: rgb(0,0,0);
+	background-color: rgba(0,0,0, 0.9);
+	background-image:url(https://www.patternlanguage.com/img/contract/sitelayout1final2.jpg);
+	background-attachment:relative;
+	background-size:100% 100%;
+	opacity:1;
+	overflow-x: hidden;
+	transition: 0.5s;
+}
+
+.overlay-content {
+	position: relative;
+	top: 25%;
+	width: 100%;
+	text-align: center;
+	font-size:500%;
+	color:#828282;
+	margin-top: 30px;
+}
+
+.closebtn {
+	position: absolute;
+	bottom: 20px;
+	right: 45px;
+	font-size: 60px !important;
+}
+
+.overlay a {
+	padding: 8px;
+	text-decoration: none;
+	font-size: 36px;
+	color: black;
+	display: block;
+	transition: 0.3s;
+}
+
+.overlay a:hover, .overlay a:focus {
+	color: #d9d9d9;
+}
+form{
+margin:40px 0;
+}
+
+.dot{
+	clear: both;
+	margin: 0 20px;
+	font-size:100%;
+}
+.Mdot{
+	//background-color:gray;
+	float:left;
+}
+label {
+  width: 200px;
+  border-radius: 5px;
+  border: 4px solid black;
+}
+
+input.radio:empty {
+	margin-left: -999px;
+}
+input.radio:empty ~ label {
+	position: relative;
+	float: left;
+	line-height: 2.5em;
+	text-indent: 3.25em;
+	margin-top: 2em;
+	cursor: pointer;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+input.radio:empty ~ label:before {
+	position: absolute;
+	display: block;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	content: '';
+	width: 2.5em;
+	background: #D1D3D4;
+	border-radius: 3px 0 0 3px;
+}
+input.radio:hover:not(:checked) ~ label:before {
+	content:'\2714';
+	text-indent: .1em;
+	color: #C2C2C2;
+}
+
+input.radio:hover:not(:checked) ~ label {
+	color: #888;
+}
+input.radio:checked ~ label:before {
+	content:'\2714';
+	text-indent: .9em;
+	color: #9CE2AE;
+	background-color: #4DCB6D;
+}
+
+input.radio:checked ~ label {
+	color: #777;
+}
+
+
+</style>
+<div id="myNav" class="overlay">
+	<a href="javascript:void(0)" class="closebtn" onclick="closeNav()"><img class='imgnext' id="next" src ="http://images.all-free-download.com/images/graphiclarge/next_97239.jpg"></a>
+	<div class="overlay-content">
+		<p id="message">hi</p>
+	</div>
+</div>
+<canvas></canvas>
+<div class="Mdot">
+	<div class="dot" >
+  		<input type="radio" name="radio" id="radio1" class="radio" onclick = "Num() " checked>
+ 	 	<label for="radio1">NUMBERS</label>
+	</div>
+	<div class="dot" >
+		<input type="radio" name="radio"  id="radio2" class="radio" onclick = "Calp() ">
+		<label for="radio2">CAP ALPH</label>
+	</div> 
+	<div class="dot" > 
+		<input type="radio" name="radio" id="radio3" class="radio" onclick = "Salp() ">
+		<label for="radio3">SML ALPH</label>
+	</div>
+</div>	
+<script>
+
+var smlalp = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'];
+var numbers= ['0','1','2','3','4','5','6','7','8','9'];
+var capalp = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
+
+var t= 0;
+var c = document.querySelector('canvas');
+var cx = c.getContext('2d');
+var mousedown = false;
+var oldx = null;
+var oldy = null;
+var pixels = null;
+var letterpixels = null;
+var ran = [];
+ran = numbers;
+//var his = ran;
+function openNav() {
+        document.getElementById("myNav").style.width = "100%";
+}
+
+function closeNav() {
+        document.getElementById("myNav").style.width = "0%";
+        lett();
+	setupCanvas();
+}
+
+function Num(){
+ran = numbers;
+t=0;
+setupCanvas();
+}
+
+function Salp(){
+ran = smlalp;
+t=0;
+setupCanvas();
+}
+
+function Calp(){
+ran = capalp;
+t=0;
+setupCanvas();
+}
+
+function lett(){
+t=t+1;
+}
+
+
+function setupCanvas() 
+{
+	c.height = 600;//480;
+	c.width = 500;//320;
+	//c.height = window.innerHeight/1.2;
+        //c.width = window.innerWidth /1.5;
+	cx.lineWidth = 30;
+	cx.lineCap = 'round';
+	cx.strokeStyle = 'rgb(0, 0, 50)';
+	cx.font = 'bold 300px helvetica';
+	cx.fillStyle = 'rgb(255, 0, 0)';
+	cx.textBaseline = 'middle';
+	drawletter(ran[t]);
+	pixels = cx.getImageData(0, 0, c.width, c.height);
+	letterpixels = getpixelamount(255, 0, 0);
+}
+
+function drawletter(letter) 
+{
+	var centerx = (c.width - cx.measureText(letter).width) / 2;
+	var centery = c.height / 2;
+	cx.fillText(letter, centerx, centery);
+};
+
+function showerror() 
+{
+	mousedown = false;
+	document.getElementById('message').innerHTML = 'You are out side';	
+	oldx=null;
+	oldy=null;
+	openNav();
+	t--;
+	//closeMav();
+	//location.reload(true);
+	//setTimeout(function(){location.reload();},1);	
+};
+
+function pausecomp(millis)
+{
+	var date = new Date();
+	var curDate = null;
+	do { curDate = new Date(); }
+	while(curDate-date < millis);
+}
+
+function paint(x, y) 
+{
+	var colour = getpixelcolour(x, y);
+	var oldcolour = getpixelcolour(oldx,oldy);
+	if (colour.a === 0){
+		if(oldcolour.a != 0){
+			document.getElementById("myNav").style.backgroundImage="url(http://coloringtop.com/sites/default/files/18_641.jpg)";
+			//document.getElementById("next").style.backgroundImage="url(http://furtaev.ru/preview/reload_small.png)";
+			showerror();
+		}
+	} 
+	else {
+		cx.beginPath();
+		if (oldx > 0 && oldy > 0){
+			cx.moveTo(oldx, oldy);
+		}
+		cx.lineTo(x, y);
+		cx.stroke();
+		cx.closePath();
+		oldx = x;
+		oldy = y;
+	}
+};
+
+function getpixelcolour(x, y) {
+	var index = ((y * (pixels.width * 4)) + (x * 4));
+	return {
+		r: pixels.data[index],
+	    g: pixels.data[index + 1],
+	    b: pixels.data[index + 2],
+	    a: pixels.data[index + 3]
+	};
+}
+
+function getpixelamount(r, g, b) {
+	var pixels = cx.getImageData(0, 0, c.width, c.height);
+	var all = pixels.data.length;
+	var amount = 0;
+	for (i = 0; i < all; i += 4) {
+		if (pixels.data[i] === r &&
+				pixels.data[i + 1] === g &&
+				pixels.data[i + 2] === b) {
+			amount++;
+		}
+	}
+	return amount;
+};
+
+function pixelthreshold() {
+	if (getpixelamount(0, 0, 50) / letterpixels > 0.65 && oldx!=null && oldy!=null) {
+		//alert('you got it!');
+		document.getElementById('message').innerHTML = 'You got it!!!';
+		document.getElementById("myNav").style.backgroundImage="url(https://33.media.tumblr.com/9ceac9dd27c558618b64d3ab61400d84/tumblr_inline_nf62gaepa51rcll4z.jpg)";
+		//document.getElementById("next").style.backgroundImage="url(http://a.dryicons.com/images/icon_sets/luna_grey_icons/png/128x128/next.png)";
+		oldx=null;
+		oldy=null;
+		openNav();
+		//t=t-1;
+		//closeMav();
+	}
+};
+
+function onmousedown(ev) {
+	mousedown = true;
+	ev.preventDefault();
+};
+function onmouseup(ev) {
+	mousedown = false;
+	pixelthreshold();
+	ev.preventDefault();
+	oldx=null;
+	oldy=null;
+};
+function onmousemove(ev) {
+	var x = ev.clientX;
+	var y = ev.clientY;
+	if (mousedown) {
+		paint(x, y);
+	}
+};
+
+c.addEventListener('mousedown', onmousedown, false);
+c.addEventListener('mouseup', onmouseup, false);
+c.addEventListener('mousemove', onmousemove, false);
+
+setupCanvas();
+</script>
